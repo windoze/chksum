@@ -50,7 +50,7 @@ pub fn calculate_checksum(path: &Path, algorithm: Algorithm) -> Result<Vec<u8>> 
         if n == 0 {
             break;
         }
-        (*hasher).update(&buffer[0..n]);
+        hasher.update(&buffer[0..n]);
     }
     Ok(Vec::from(hasher.finalize()))
 }
