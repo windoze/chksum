@@ -33,7 +33,7 @@ fn generate_checksums(opts: &GenerationOpt) -> Result<bool> {
     {
         let (tx, rx) = channel();
         let mut count: usize = 0;
-        for entry in WalkDir::new(&opts.directory).follow_links(true).same_file_system(true) {
+        for entry in opts.directory.iter().map(|d| WalkDir::new(d).follow_links(true).same_file_system(true)).flatten() {
             match entry {
                 Ok(e) => {
                     if e.path().is_dir() || !e.path().is_file() {
@@ -46,7 +46,7 @@ fn generate_checksums(opts: &GenerationOpt) -> Result<bool> {
                     });
                 }
                 Err(e) => {
-                    eprintln!("{:?}", e);
+                    eprintln!("{}", e);
                 }
             };
             count += 1;
@@ -68,7 +68,7 @@ fn generate_checksums(opts: &GenerationOpt) -> Result<bool> {
                     results.push((path.to_owned(), checksum_str));
                 }
                 Err(e) => {
-                    eprintln!("{:?}", e);
+                    eprintln!("{}", e);
                     all_succeeded = false
                 }
             }
@@ -133,7 +133,7 @@ fn verify_checksums(opts: &VerificationOpt) -> Result<bool> {
                     all_succeeded &= is_ok;
                 }
                 Err(e) => {
-                    eprintln!("{:?}", e);
+                    eprintln!("{}", e);
                 }
             }
         }

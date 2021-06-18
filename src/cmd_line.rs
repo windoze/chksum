@@ -5,7 +5,7 @@ use structopt::StructOpt;
 use crate::error::AppError;
 
 #[derive(Debug, StructOpt)]
-#[structopt(name = "chksum", about = "A tool to generate and verify file checksums.", rename_all = "kebab-case")]
+#[structopt(name = "chksum", about = "A tool to generate and verify file checksums.", author = "Chen Xu <windoze@0d0a.com>", rename_all = "kebab-case")]
 pub struct AppArgs {
     #[structopt(subcommand)]  // Note that we mark a field as a subcommand
     pub cmd: Commands,
@@ -22,8 +22,8 @@ pub struct GenerationOpt {
     #[structopt(short, default_value)]
     pub num_threads: ThreadNum,
 
-    #[structopt(name = "DIR", short = "d", parse(from_os_str), default_value = ".")]
-    pub directory: PathBuf,
+    #[structopt(parse(from_os_str), default_value = ".")]
+    pub directory: Vec<PathBuf>,
 
 }
 

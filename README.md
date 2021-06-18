@@ -23,14 +23,14 @@ chksum v
 帮助（可以使用 `chksum --help` 查看）：
 ```
 用法:
-    chksum g [选项]     : 创建校验文件
-    chksum v [选项]     : 使用校验文件对文件进行验证
+    chksum g [选项] <directory>   : 创建校验文件
+    chksum v [选项]               : 使用校验文件对文件进行验证
 
 Options:
+    <directory>             指定要验证的文件夹（默认值为当前工作路径）
     --version               打印程序版本信息
     -h --help               打印本帮助信息
     -f <checksums file>     指定校验文件路径（默认值为 checksums.txt）
-    -d <directory>          指定要验证的文件夹（默认值为当前工作路径）
     -a --algorithm          指定将使用的哈希算法（create 模式下默认为 SHA-256，verify 模式下默认根据哈希值长度自动选择）
     -q --quiet              校验哈希时只显示校验错误的文件名
     -n --num-threads        指定计算哈希值的并发线程数（默认为当前物理处理器数s）
@@ -42,8 +42,6 @@ chksum 有两种模式：创建（generate）模式，校验（verify）模式�
 通过将 `g`或 `v` 作为第一个参数传递指定。
 
 `-f` 选项用于指定 checksums 文件的路径，默认为当前工作路径下的 `checksums.txt` 文件，当文件名为`-`时使用标准输入/输出流。
-
-`-d` 选项用于指定处理的根路径，默认为当前工作路径。
 
 `-a` 选项用于指定使用的哈希算法。
 未指定时，创建模式会默认选择 SHA-256 算法生成校验文件，而校验模式会根据校验文件第一行中哈希码的长度来自动判断算法。
