@@ -4,11 +4,11 @@ mod cmd_line;
 
 use std::fs::{OpenOptions, File};
 use std::io::{Write, BufRead, BufReader, Read};
-use std::path::PathBuf;
+use std::path::{PathBuf, Path};
 use std::sync::mpsc::channel;
 
 use anyhow::Result;
-use itertools::join;
+use itertools::{join, Itertools};
 use structopt::StructOpt;
 use threadpool::ThreadPool;
 use walkdir::{WalkDir, DirEntry};
@@ -26,6 +26,42 @@ fn output_checksum(entry: DirEntry, opts: &GenerationOpt) -> Result<(PathBuf, Ve
     Ok((path.to_owned(), c))
 }
 
+struct Exclusion {
+    e: Vec<PathBuf>,
+}
+
+impl Exclusion {
+    fn new(excludes: &Vec<PathBuf>, checksum_file: &PathBuf) -> Self {
+        Self {
+            e: excludes.iter().filter_map(|p| {
+                if p.to_string_lossy() == "-" {
+                    if checksum_file.to_string_lossy() == "-" {
+                        None
+                    } else {
+                        checksum_file.canonicalize().ok()
+                    }
+                } else {
+                    p.canonicalize().ok()
+                }
+            }).unique().collect()
+        }
+    }
+
+    fn is_excluded(&self, path: &Path) -> bool {
+        let c = match path.canonicalize() {
+            Ok(p) => p,
+            Err(e) => {
+                eprintln!("{}", e);
+                return false;
+            }
+        };
+        for p in self.e.iter() {
+            if p == &c { return true; }
+        }
+        false
+    }
+}
+
 fn generate_checksums(opts: &GenerationOpt) -> Result<bool> {
     let pool = ThreadPool::new(opts.num_threads.0);
     let dot_prefix = format!(".{}", std::path::MAIN_SEPARATOR);
@@ -33,10 +69,11 @@ fn generate_checksums(opts: &GenerationOpt) -> Result<bool> {
     {
         let (tx, rx) = channel();
         let mut count: usize = 0;
+        let exclusion = Exclusion::new(&opts.exclude, &opts.checksum_file);
         for entry in opts.directory.iter().map(|d| WalkDir::new(d).follow_links(true).same_file_system(true)).flatten() {
             match entry {
                 Ok(e) => {
-                    if e.path().is_dir() || !e.path().is_file() {
+                    if e.path().is_dir() || !e.path().is_file() || exclusion.is_excluded(e.path()) {
                         continue;
                     }
                     let tx = tx.clone();

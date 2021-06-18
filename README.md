@@ -1,10 +1,12 @@
 # chksum
 
+（这个README是从 https://github.com/Glavo/gchecksum 抄的，因为我懒得写-_-|||）
+
 **Chinese** | English (TODO)
 
 English documents are not available, welcome to contribute.
 
-(English help is available, please execute `chksum -- help` to view)
+(English help is available, please execute `chksum help` to view)
 
 一个简单的文件夹校验工具，用于为文件夹下所有文件生成哈希码并保存到文件，
 以及使用保存的哈希码对文件夹内容进行校验。
@@ -20,7 +22,7 @@ chksum g
 chksum v
 ```
 
-帮助（可以使用 `chksum --help` 查看）：
+帮助（可以使用 `chksum help` 查看）：
 ```
 用法:
     chksum g [选项] <directory>   : 创建校验文件
@@ -34,6 +36,7 @@ Options:
     -a --algorithm          指定将使用的哈希算法（create 模式下默认为 SHA-256，verify 模式下默认根据哈希值长度自动选择）
     -q --quiet              校验哈希时只显示校验错误的文件名
     -n --num-threads        指定计算哈希值的并发线程数（默认为当前物理处理器数s）
+    -x --exclude            生成文件哈希的时候跳过指定的文件（默认跳过输出的校验文件）
 ```
 
 ## 介绍

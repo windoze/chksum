@@ -22,9 +22,11 @@ pub struct GenerationOpt {
     #[structopt(short, default_value)]
     pub num_threads: ThreadNum,
 
+    #[structopt(short = "x", parse(from_os_str), default_value = "-")]
+    pub exclude: Vec<PathBuf>,
+
     #[structopt(parse(from_os_str), default_value = ".")]
     pub directory: Vec<PathBuf>,
-
 }
 
 #[derive(Clone, Debug, StructOpt)]
