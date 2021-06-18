@@ -59,18 +59,23 @@ fn generate_checksums(opts: &GenerationOpt) -> Result<bool> {
             Box::new(OpenOptions::new().create(true).write(true).truncate(true).open(&opts.checksum_file)?)
         };
 
+        let mut results: Vec<(PathBuf, String)> = Vec::new();
         for _ in 0..count {
             match rx.iter().next().ok_or(AppError::UnknownError)? {
                 Ok((path, checksum)) => {
                     let path = path.strip_prefix(&dot_prefix).unwrap_or(&path);
                     let checksum_str = join(checksum.into_iter().map(|b| format!("{:02x}", b)), "");
-                    output.write(format!("{}  {}\n", &checksum_str, path.display()).as_bytes())?;
+                    results.push((path.to_owned(), checksum_str));
                 }
                 Err(e) => {
                     eprintln!("{:?}", e);
                     all_succeeded = false
                 }
             }
+        }
+        results.sort_by(|e1, e2| e1.0.partial_cmp(&e2.0).unwrap());
+        for e in results.into_iter() {
+            output.write(format!("{}  {}\n", e.1, e.0.display()).as_bytes())?;
         }
     }
     pool.join();

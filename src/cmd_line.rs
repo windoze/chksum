@@ -131,6 +131,11 @@ impl FromStr for Algorithm {
             "SHA256" => Algorithm::SHA256,
             "SHA384" => Algorithm::SHA384,
             "SHA512" => Algorithm::SHA512,
+            "SHA-1" => Algorithm::SHA1,
+            "SHA-224" => Algorithm::SHA224,
+            "SHA-256" => Algorithm::SHA256,
+            "SHA-384" => Algorithm::SHA384,
+            "SHA-512" => Algorithm::SHA512,
             _ => return Err(AppError::InvalidAlgorithmError(s.to_owned()))
         })
     }
