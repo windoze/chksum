@@ -63,7 +63,7 @@ impl Exclusion {
 }
 
 fn generate_checksums(opts: &GenerationOpt) -> Result<bool> {
-    let pool = ThreadPool::new(opts.num_threads.0);
+    let pool = ThreadPool::new(opts.num_threads.into());
     let dot_prefix = format!(".{}", std::path::MAIN_SEPARATOR);
     let mut all_succeeded: bool = true;
     {
@@ -132,7 +132,7 @@ macro_rules! next_part {
 }
 
 fn verify_checksums(opts: &VerificationOpt) -> Result<bool> {
-    let pool = ThreadPool::new(opts.num_threads.0);
+    let pool = ThreadPool::new(opts.num_threads.into());
     let mut all_succeeded: bool = true;
     {
         let input: Box<dyn Read> = if opts.checksum_file == PathBuf::from("-") {

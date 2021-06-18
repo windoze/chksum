@@ -59,7 +59,7 @@ pub enum Commands {
 }
 
 #[derive(Copy, Clone, Debug)]
-pub struct ThreadNum(pub usize);
+pub struct ThreadNum(usize);
 
 impl Default for ThreadNum {
     fn default() -> Self {
