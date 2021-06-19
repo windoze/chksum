@@ -66,6 +66,7 @@ mod test {
     use tempfile::NamedTempFile;
     use std::io::Write;
     use crate::checksum::verify_checksum;
+    use crate::cmd_line::Algorithm;
 
     #[test]
     fn test_checksum() {
@@ -79,6 +80,13 @@ mod test {
         assert!(verify_checksum(path, "423df0dab6a97c46239d196ad6f610edf5484650e9e7085634045e8b3fc19d0b", None).unwrap().1);
         assert!(verify_checksum(path, "9732f0a3c0a4cb8d834111224681e516534e74d5062e67bc5f652e5c5684d5b01795781bd5e51fdf0aeb1e13abd5004e", None).unwrap().1);
         assert!(verify_checksum(path, "56e36f3eb1a36bef4d8665f17efe30a52f190bdbaff24be9f73ed18cdbab41b09eca3256967a1b5da04d2b501e7d3cd4b0fbe55a0e64ae905aefe8676a7aaa9d", None).unwrap().1);
+
+        assert!(verify_checksum(path, "bb057481a1b7abc93ad5d70d52e3a55f", Some(Algorithm::MD5)).unwrap().1);
+        assert!(verify_checksum(path, "a9c0f8c056a19fdfd18db386039bdc90e680116c", Some(Algorithm::SHA1)).unwrap().1);
+        assert!(verify_checksum(path, "1815e1f3522b385698aec88f13f880e838264fbd3f90f6e25f22fd8e", Some(Algorithm::SHA224)).unwrap().1);
+        assert!(verify_checksum(path, "423df0dab6a97c46239d196ad6f610edf5484650e9e7085634045e8b3fc19d0b", Some(Algorithm::SHA256)).unwrap().1);
+        assert!(verify_checksum(path, "9732f0a3c0a4cb8d834111224681e516534e74d5062e67bc5f652e5c5684d5b01795781bd5e51fdf0aeb1e13abd5004e", Some(Algorithm::SHA384)).unwrap().1);
+        assert!(verify_checksum(path, "56e36f3eb1a36bef4d8665f17efe30a52f190bdbaff24be9f73ed18cdbab41b09eca3256967a1b5da04d2b501e7d3cd4b0fbe55a0e64ae905aefe8676a7aaa9d", Some(Algorithm::SHA512)).unwrap().1);
 
         assert!(!verify_checksum(path, "0b057481a1b7abc93ad5d70d52e3a55f", None).unwrap().1);
         assert!(!verify_checksum(path, "09c0f8c056a19fdfd18db386039bdc90e680116c", None).unwrap().1);
