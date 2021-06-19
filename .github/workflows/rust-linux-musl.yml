@@ -19,4 +19,5 @@ jobs:
     - name: Run tests
       run: cargo test --verbose
     - name: Build
-      run: cargo build --release --target x86_64-unknown-linux-musl --verbose
+      uses: ismail/rust-action@main
+      with: cargo build --release --target x86_64-unknown-linux-musl --verbose
