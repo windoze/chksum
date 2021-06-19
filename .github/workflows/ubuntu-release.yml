@@ -22,5 +22,5 @@ jobs:
           prerelease: false
           files: |
             README.md
-            LICENSE.txt
+            LICENSE
             target/release/chksum
